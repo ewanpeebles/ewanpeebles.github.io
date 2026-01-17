@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minecraft Quiz</title>
+  </head>
+  <body>
+    <div id="quiztext-wrap">
+      <p id="quiztext">Loading...</p>
+    </div>
+    <div id="buttons">
+      <button id="button-1">Loading...</button>
+      <button id="button-2">Loading...</button>
+      <button id="button-3">Loading...</button>
+      <button id="button-4">Loading...</button>
+    </div>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      #quiztext-wrap {
+        text-align: center;
+        width: 80%;
+        margin-inline: auto;
+        height: 60%;
+      }
+      #quiztext {
+        margin-top: 10%;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+      }
+      #buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 80%;
+        height: 20%;
+        margin-top: 40px;
+        margin-inline: auto;
+      }
+      #buttons button:not(.correct):not(.incorrect) {
+        background-color: #eff0ef;
+        transition: 250ms linear;
+        border: 2px solid black;
+        border-radius: 5px;
+        height: 3em;
+      }
+      #buttons button:hover:not(.correct):not(.incorrect) {
+        background-color: #d2d2d2;
+        transition: 250ms linear;
+      }
+      #buttons button:active:not(.correct):not(.incorrect) {
+        background-color: #b1b1b1;
+        transition: 250ms linear;
+      }
+      .correct {
+        background-color: rgb(0, 251, 17);
+        transition: 100ms linear;
+        border: 2px solid black;
+        border-radius: 5px;
+        height: 3em;
+      }
+      .incorrect {
+        background-color: rgb(255, 0, 0);
+        transition: 100ms linear;
+        border: 2px solid black;
+        border-radius: 5px;
+        height: 3em;
+      }
+    </style>
+    <script>
+      const data = [
+        {
+          text: "What color is NOT an creeper?",
+          buttons: ["Green", "White", "Black", "Blue"],
+          correct: 2,
+        },
+        {
+          text: "How do you get a endermite?",
+          buttons: ["Ender", "Go to end", "Silverfish", "Blue"],
+          correct: 1,
+        },
+        {
+          text: "What can't you smelt in the furnace?",
+          buttons: ["Smithing tables", "Fletching tables", "Torches", "Blue"],
+          correct: 2,
+        },
+        {
+          text: "What does putting a glistering melon into an awkward potion give you?",
+          buttons: [
+            "Healing potion",
+            "Potion of regeneration",
+            "Potion of luck",
+            "Blue",
+          ],
+          correct: 0,
+        },
+        {
+          text: "Are haybales actually useful in Minecraft?",
+          buttons: ["Yes", "No", "Sometimes", "Blue"],
+          correct: 1,
+        },
+        {
+          text: "What color is the sky?",
+          buttons: ["Azure", "Cyan", "Cerulean", "Blue"],
+          correct: 0,
+        },
+        {
+          text: "What are command blocks for?",
+          buttons: [
+            "Making withers",
+            "Minigames",
+            "Command block swords",
+            "Blue",
+          ],
+          correct: 0,
+        },
+        {
+          text: "What is the most useful villager block?",
+          buttons: ["Smithing Table", "Composter", "Fletching Table", "Blue"],
+          correct: 2,
+        },
+        {
+          text: "Who is the best Minecraft YouTuber?",
+          buttons: ["PrestonPlayz", "Camman18", "Technoblade", "Blue"],
+          correct: 0,
+        },
+        {
+          text: "Do you like this quiz?",
+          buttons: ["Yes", "No", "Maybe", "Blue"],
+          correct: 3,
+        },
+      ];
+      var currentDataIndex = 0;
+      var acceptingAnswers = true;
+
+      var answersRight = 0;
+
+      const quizText = document.getElementById("quiztext");
+      const button1 = document.getElementById("button-1");
+      const button2 = document.getElementById("button-2");
+      const button3 = document.getElementById("button-3");
+      const button4 = document.getElementById("button-4");
+      button1.addEventListener("click", handleClick);
+      button2.addEventListener("click", handleClick);
+      button3.addEventListener("click", handleClick);
+      button4.addEventListener("click", handleClick);
+
+      const buzzer = new Audio("buzzer.m4a");
+      const correct = new Audio("correct.m4a");
+
+      function update() {
+        if (currentDataIndex < data.length) {
+          const currentData = data[currentDataIndex];
+          quizText.innerHTML = currentData.text;
+          button1.innerText = currentData.buttons[0];
+          button2.innerText = currentData.buttons[1];
+          button3.innerText = currentData.buttons[2];
+          button4.innerText = currentData.buttons[3];
+        } else {
+          quizText.innerHTML =
+            "You finished the quiz! You got " +
+            (answersRight / data.length) * 100 +
+            "% of your answers correct.";
+          button1.innerText = "Yay!";
+          button2.innerText = "Yay!";
+          button3.innerText = "Yay!";
+          button4.innerText = "Yay!";
+          acceptingAnswers = false;
+        }
+      }
+      function handleClick(event) {
+        if (acceptingAnswers) {
+          acceptingAnswers = false;
+          const currentData = data[currentDataIndex];
+          if (
+            currentData.buttons.indexOf(this.innerText) == currentData.correct
+          ) {
+            quizText.innerHTML = "Maybe you have potential after all!";
+            this.classList.add("correct");
+            answersRight++;
+            correct.play();
+          } else {
+            quizText.innerHTML =
+              "No, you're wrong. Correct answer: " +
+              currentData.buttons[currentData.correct];
+            this.classList.add("incorrect");
+            buzzer.play();
+          }
+          setTimeout(() => {
+            currentDataIndex++;
+            acceptingAnswers = true;
+            this.classList.remove("correct");
+            this.classList.remove("incorrect");
+            update();
+          }, 3000);
+        } else {
+          buzzer.play();
+        }
+      }
+
+      update();
+    </script>
+  </body>
+</html>
