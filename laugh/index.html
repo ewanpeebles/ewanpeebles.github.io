@@ -33,9 +33,12 @@
         <button id="play-laugh"><img src="red-button-isolated-on-white-background-free-vector.jpg" /></button>
     </div>
     <script>
-        const laugh_button = document.getElementById("play-laugh")
+        const laugh_button = document.getElementById('play-laugh')
         const laughing_sound = new Audio('sitcom-laughing-1.mp3')
         laugh_button.addEventListener('click', () => {
+            laughing_sound.play()
+        })
+        document.addEventListener('keydown', (e) => {
             laughing_sound.play()
         })
     </script>
